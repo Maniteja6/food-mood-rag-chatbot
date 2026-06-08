@@ -1,0 +1,22 @@
+# =============================================================================
+# Food Mood RAG Chatbot — System Packages (Streamlit Cloud)
+# =============================================================================
+# Streamlit Cloud reads this file and installs these apt packages before
+# running your Python app. Only add packages that pip cannot provide.
+# One package per line. No version pinning supported.
+# =============================================================================
+
+# Required by sentence-transformers / torch for CPU inference
+libgomp1
+
+# Required by some chromadb builds and native extensions
+build-essential
+
+# Required by faiss-cpu
+libopenblas-dev
+
+# Required if you load data from SQLite (chromadb uses it internally)
+libsqlite3-dev
+
+# curl — useful for health-check scripts and debugging in cloud shell
+curl
