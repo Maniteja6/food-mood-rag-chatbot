@@ -127,15 +127,19 @@ class Retriever:
         fetch_k = max(top_k * 4, 20)   # over-fetch to allow filter headroom
 
         # ── Step 1+2: raw search + normalise ─────────────────────────────────
-        if self._provider == "chroma":
-            raw = self._search_chroma(query_vector, fetch_k)
-        elif self._provider == "faiss":
-            raw = self._search_faiss(query_vector, fetch_k)
-        else:
-            raise ValueError(
-                f"Unknown vector_store_provider '{self._provider}'. "
-                "Set VECTOR_STORE_PROVIDER=chroma or faiss in your .env."
-            )
+        # Prefer VectorStoreBase.query() for proper abstraction classes
+        try:
+            from vector_store.base import VectorStoreBase as _VSB
+            if isinstance(self._store, _VSB):
+                raw = self._search_via_base(query_vector, fetch_k)
+            elif self._provider == "chroma":
+                raw = self._search_chroma(query_vector, fetch_k)
+            else:
+                raw = self._search_faiss(query_vector, fetch_k)
+        except ImportError:
+            raw = (self._search_chroma(query_vector, fetch_k)
+                   if self._provider == "chroma"
+                   else self._search_faiss(query_vector, fetch_k))
 
         if not raw:
             logger.warning("Vector store returned 0 results.")
@@ -275,6 +279,24 @@ class Retriever:
             ))
 
         return docs
+
+    def _search_via_base(
+        self,
+        query_vector: list[float],
+        fetch_k:      int,
+    ) -> list[RetrievedDoc]:
+        """Query any VectorStoreBase subclass and recast to RetrievedDoc."""
+        results = self._store.query(vector=query_vector, top_k=fetch_k)
+        return [
+            RetrievedDoc(
+                chunk_id=r["chunk_id"],
+                document=r.get("document", ""),
+                metadata=r.get("metadata", {}),
+                score=r["score"],
+                rank=r["rank"],
+            )
+            for r in results
+        ]
 
     # ─────────────────────────────────────────────────────────────────────────
     # Step 3 — Hard metadata filters

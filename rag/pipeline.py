@@ -858,66 +858,21 @@ class RAGPipeline:
     # ─────────────────────────────────────────────────────────────────────────
 
     def _build_vector_store(self):
-        """Open the configured vector store and return the store object."""
-        provider = self.cfg.vector_store_provider.value
-
-        if provider == "chroma":
-            return self._open_chroma()
-        elif provider == "faiss":
-            return self._open_faiss()
-        else:
-            raise ValueError(f"Unknown vector store provider: '{provider}'")
-
-    def _open_chroma(self):
-        try:
-            import chromadb
-        except ImportError:
-            raise ImportError("Run: pip install chromadb")
-
-        db_path    = self.cfg.vector_db_path
-        collection = self.cfg.chroma_collection_name
-
-        client = chromadb.PersistentClient(path=str(db_path))
-        col    = client.get_or_create_collection(
-            name=collection,
-            metadata={"hnsw:space": "cosine"},
+        """Open the configured vector store via the vector_store package."""
+        from vector_store import VectorStoreBase
+        store = VectorStoreBase.from_settings(self.cfg)
+        h = store.health()
+        logger.info(
+            f"  VectorStore: {h['provider']}  "
+            f"count={h.get('count',0):,}  "
+            f"ready={h['is_ready']}"
         )
-        count = col.count()
-        logger.info(f"  VectorStore: ChromaDB '{collection}' ({count:,} vectors)")
-
-        if count == 0:
+        if not h["is_ready"]:
             logger.warning(
-                "ChromaDB collection is empty. "
+                "Vector store is empty. "
                 "Run 'make ingest' to populate the vector database."
             )
-        return col
-
-    def _open_faiss(self):
-        try:
-            import faiss, json as _json
-        except ImportError:
-            raise ImportError("Run: pip install faiss-cpu")
-
-        import json as _json
-        from pathlib import Path
-
-        db_path    = Path(self.cfg.vector_db_path)
-        index_file = db_path / "index.faiss"
-        meta_file  = db_path / "metadata.json"
-
-        if not index_file.exists():
-            logger.warning(
-                f"FAISS index not found at '{index_file}'. "
-                "Run 'make ingest' to build the index."
-            )
-            return {"index": None, "meta": [], "path": db_path}
-
-        index = faiss.read_index(str(index_file))
-        with open(meta_file, encoding="utf-8") as fh:
-            meta = _json.load(fh)
-
-        logger.info(f"  VectorStore: FAISS ({index.ntotal:,} vectors)")
-        return {"index": index, "meta": meta, "path": db_path}
+        return store
 
     # ─────────────────────────────────────────────────────────────────────────
     # Error fallback
