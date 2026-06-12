@@ -1,502 +1,102 @@
 {
-  "_comment": "Mood-to-food descriptor mapping for MoodBite RAG chatbot. Each mood maps to: descriptors (embed-time expansion), food_categories (retrieval hint), flavours, textures, occasions, top_cuisines, avoid (negative signal), and ui config. All values are grounded in the actual food_dataset.csv statistics.",
-
-  "happy": {
-    "descriptors": [
-      "uplifting", "bright", "joyful", "light", "fresh", "colourful",
-      "celebratory", "cheerful", "energising", "vibrant", "feel-good",
-      "sunshine", "zesty", "playful", "lively"
-    ],
-    "food_categories": [
-      "light meals", "fresh salads", "fruit-based dishes", "colourful bowls",
-      "celebratory food", "crowd-pleasers", "sharing plates"
-    ],
-    "flavours": ["fragrant", "creamy", "delicate", "tangy", "citrusy", "sweet"],
-    "textures": ["airy", "light", "chunky", "fluffy", "crispy"],
-    "occasions": ["family gathering", "potluck", "celebration feast", "Sunday brunch"],
-    "top_cuisines": ["French", "Caribbean", "Korean", "Japanese", "Mediterranean"],
-    "meal_types": ["Main Course", "Salad", "Dessert", "Snack"],
-    "avoid": ["very heavy", "extremely rich", "dense stodgy"],
-    "spice_preference": "mild to medium",
-    "ui": {
-      "emoji": "😄",
-      "colour": "#FFF8E7",
-      "label": "Happy"
-    }
-  },
-
-  "sad": {
-    "descriptors": [
-      "comforting", "warming", "soothing", "nostalgic", "gentle",
-      "soul-food", "healing", "tender", "soft", "consoling",
-      "hug-in-a-bowl", "homestyle", "familiar", "cosy", "nourishing"
-    ],
-    "food_categories": [
-      "comfort food", "soups", "stews", "warm bowls", "noodle dishes",
-      "mac and cheese", "mashed potato", "warm desserts", "hot chocolate",
-      "casseroles", "pasta", "porridge"
-    ],
-    "flavours": ["briny", "sweet", "nutty", "fragrant", "buttery", "savoury"],
-    "textures": ["airy", "crispy", "fluffy", "silky", "melt-in-your-mouth"],
-    "occasions": ["solo lunch", "comfort meal", "rainy day", "weeknight dinner"],
-    "top_cuisines": ["American", "Korean", "Japanese", "British", "Italian"],
-    "meal_types": ["Main Course", "Soup", "Dessert"],
-    "avoid": ["spicy", "challenging", "raw"],
-    "spice_preference": "mild",
-    "ui": {
-      "emoji": "😢",
-      "colour": "#EEF4FF",
-      "label": "Sad"
-    }
-  },
-
-  "stressed": {
-    "descriptors": [
-      "calming", "indulgent", "familiar", "reliable", "grounding",
-      "stress-relief", "satisfying", "uncomplicated", "soothing",
-      "comfort", "unwinding", "treat yourself", "restorative", "simple"
-    ],
-    "food_categories": [
-      "comfort food", "warm dishes", "carbohydrate-rich",
-      "indulgent", "dark chocolate", "ice cream", "pasta",
-      "bread", "cheese dishes", "hot soup"
-    ],
-    "flavours": ["delicate", "nutty", "creamy", "spicy", "sweet", "smoky"],
-    "textures": ["crunchy", "light", "dense", "melt-in-your-mouth", "tender"],
-    "occasions": ["comfort meal", "quick bite", "date night", "weeknight dinner"],
-    "top_cuisines": ["Thai", "Japanese", "Turkish", "Italian", "Indian"],
-    "meal_types": ["Main Course", "Snack", "Dessert"],
-    "avoid": ["complicated", "challenging", "time-consuming"],
-    "spice_preference": "mild to medium",
-    "ui": {
-      "emoji": "😤",
-      "colour": "#FFF0F0",
-      "label": "Stressed"
-    }
-  },
-
-  "tired": {
-    "descriptors": [
-      "energising", "quick", "nourishing", "reviving", "easy",
-      "simple", "iron-rich", "protein-packed", "pick-me-up",
-      "sustaining", "fuel", "refreshing", "quick prep", "effortless"
-    ],
-    "food_categories": [
-      "quick meals", "energy-boosting", "protein-rich",
-      "easy one-pan dishes", "smoothie bowls", "eggs", "rice bowls",
-      "simple pasta", "takeaway-style", "sandwiches"
-    ],
-    "flavours": ["sweet", "umami-rich", "citrusy", "herbaceous", "tangy", "bold"],
-    "textures": ["crispy", "flaky", "fluffy", "chewy", "light"],
-    "occasions": ["quick bite", "weeknight dinner", "meal prep", "solo lunch"],
-    "top_cuisines": ["Greek", "Moroccan", "Chinese", "Korean", "Japanese"],
-    "meal_types": ["Main Course", "Snack", "Breakfast", "Soup"],
-    "avoid": ["slow-cooked", "lengthy prep", "complicated techniques"],
-    "spice_preference": "any",
-    "ui": {
-      "emoji": "😴",
-      "colour": "#F0EEF8",
-      "label": "Tired"
-    }
-  },
-
-  "romantic": {
-    "descriptors": [
-      "elegant", "rich", "sensual", "indulgent", "intimate",
-      "luxurious", "special", "impressive", "sophisticated", "refined",
-      "date-night", "candlelit", "fine dining", "share-worthy", "beautiful"
-    ],
-    "food_categories": [
-      "fine dining", "pasta dishes", "seafood", "steak",
-      "chocolate desserts", "wine-friendly food", "sharing platters",
-      "stuffed dishes", "slow-cooked", "French cuisine"
-    ],
-    "flavours": ["sweet and sour", "umami-rich", "nutty", "fragrant", "buttery", "creamy"],
-    "textures": ["light", "airy", "tender", "silky", "melt-in-your-mouth"],
-    "occasions": ["date night", "romantic dinner", "celebration feast"],
-    "top_cuisines": ["French", "Italian", "Moroccan", "Turkish", "Mediterranean"],
-    "meal_types": ["Main Course", "Starter", "Dessert"],
-    "avoid": ["messy street food", "fast food", "pungent odours"],
-    "spice_preference": "mild",
-    "ui": {
-      "emoji": "💕",
-      "colour": "#FFF0F5",
-      "label": "Romantic"
-    }
-  },
-
-  "excited": {
-    "descriptors": [
-      "bold", "vibrant", "festive", "adventurous", "fun",
-      "punchy", "colourful", "party food", "crowd-pleasing",
-      "sharing", "big flavours", "celebratory", "lively", "energetic"
-    ],
-    "food_categories": [
-      "street food", "sharing platters", "party food", "fried food",
-      "bbq", "loaded dishes", "dumplings", "tacos", "wings",
-      "colourful bowls", "festive food"
-    ],
-    "flavours": ["sweet and sour", "fragrant", "peppery", "umami-rich", "tangy", "spicy"],
-    "textures": ["crispy", "velvety", "airy", "crunchy", "chewy"],
-    "occasions": ["family gathering", "office party", "celebration feast", "potluck"],
-    "top_cuisines": ["Brazilian", "Vietnamese", "Korean", "Mexican", "Thai"],
-    "meal_types": ["Snack", "Main Course", "Starter"],
-    "avoid": ["bland", "plain", "monotonous"],
-    "spice_preference": "medium to spicy",
-    "ui": {
-      "emoji": "🎉",
-      "colour": "#FFF3E8",
-      "label": "Excited"
-    }
-  },
-
-  "cozy": {
-    "descriptors": [
-      "warming", "hearty", "comforting", "snug", "familiar",
-      "homemade", "slow-cooked", "winter", "autumnal", "blanket food",
-      "hot", "thick", "stodgy", "filling", "rustic"
-    ],
-    "food_categories": [
-      "stews", "casseroles", "hot soup", "roasts",
-      "baked dishes", "gratins", "thick pasta", "warm curries",
-      "bread pudding", "hot porridge", "hot chocolate"
-    ],
-    "flavours": ["savoury", "sweet", "briny", "bold", "smoky", "earthy"],
-    "textures": ["sticky", "melt-in-your-mouth", "chunky", "dense", "hearty"],
-    "occasions": ["rainy day", "comfort meal", "Sunday brunch", "weeknight dinner"],
-    "top_cuisines": ["American", "Indian", "British", "French", "German"],
-    "meal_types": ["Main Course", "Soup", "Dessert", "Breakfast"],
-    "avoid": ["cold", "raw", "light salads"],
-    "spice_preference": "mild",
-    "ui": {
-      "emoji": "🍵",
-      "colour": "#F5F0E8",
-      "label": "Cozy"
-    }
-  },
-
-  "adventurous": {
-    "descriptors": [
-      "exotic", "bold", "unusual", "complex", "thrilling",
-      "world flavours", "street food", "fermented", "rare", "discovery",
-      "unfamiliar", "global", "boundary-pushing", "fusion", "unique"
-    ],
-    "food_categories": [
-      "exotic cuisines", "street food", "fermented dishes",
-      "unusual ingredients", "fusion food", "raw dishes",
-      "offal", "regional specialities", "rare ingredients"
-    ],
-    "flavours": ["umami-rich", "creamy", "tangy", "sweet", "earthy", "briny"],
-    "textures": ["airy", "chewy", "light", "sticky", "crispy"],
-    "occasions": ["camping trip", "holiday feast", "beach day", "date night"],
-    "top_cuisines": ["Ethiopian", "Peruvian", "Indonesian", "Moroccan", "Filipino"],
-    "meal_types": ["Main Course", "Starter", "Snack"],
-    "avoid": ["plain", "familiar", "boring"],
-    "spice_preference": "medium to very spicy",
-    "ui": {
-      "emoji": "🌍",
-      "colour": "#EDFAF4",
-      "label": "Adventurous"
-    }
-  },
-
-  "anxious": {
-    "descriptors": [
-      "gentle", "mild", "calming", "soothing", "familiar",
-      "safe", "plain", "easy-on-the-stomach", "light", "bland",
-      "simple", "non-stimulating", "soft", "easy to eat", "comforting"
-    ],
-    "food_categories": [
-      "bland comfort food", "plain rice", "soup", "toast",
-      "light pasta", "mashed potato", "porridge", "plain crackers",
-      "chamomile tea", "light sandwiches", "oatmeal"
-    ],
-    "flavours": ["fragrant", "delicate", "savoury", "sweet", "buttery"],
-    "textures": ["chewy", "dense", "flaky", "soft", "fluffy"],
-    "occasions": ["solo lunch", "comfort meal", "weeknight dinner"],
-    "top_cuisines": ["Japanese", "Mediterranean", "British", "Italian", "Greek"],
-    "meal_types": ["Main Course", "Soup", "Breakfast"],
-    "avoid": ["very spicy", "rich", "heavy", "caffeinated"],
-    "spice_preference": "mild",
-    "ui": {
-      "emoji": "😰",
-      "colour": "#F0F4FF",
-      "label": "Anxious"
-    }
-  },
-
-  "bored": {
-    "descriptors": [
-      "surprising", "interesting", "flavourful", "stimulating", "unique",
-      "punchy", "new experience", "something different", "exciting flavours",
-      "never tried", "fusion", "curiosity", "discovery", "bold", "complex"
-    ],
-    "food_categories": [
-      "new cuisines", "unusual dishes", "complex flavours",
-      "street food", "tasting menus", "fusion", "interactive food",
-      "build-your-own", "novelty food"
-    ],
-    "flavours": ["sweet and sour", "peppery", "fragrant", "spicy", "bold", "tangy"],
-    "textures": ["dense", "chewy", "tender", "crispy", "crunchy"],
-    "occasions": ["meal prep", "quick bite", "potluck", "date night"],
-    "top_cuisines": ["Peruvian", "Vietnamese", "Spanish", "Korean", "Ethiopian"],
-    "meal_types": ["Main Course", "Snack", "Starter"],
-    "avoid": ["plain", "repetitive", "familiar"],
-    "spice_preference": "medium to spicy",
-    "ui": {
-      "emoji": "😑",
-      "colour": "#F5F5F0",
-      "label": "Bored"
-    }
-  },
-
-  "nostalgic": {
-    "descriptors": [
-      "classic", "traditional", "homestyle", "reminiscent", "timeless",
-      "grandma's recipe", "childhood favourite", "old school", "heritage",
-      "retro", "home cooking", "memory", "vintage", "original", "authentic"
-    ],
-    "food_categories": [
-      "traditional recipes", "childhood favourites", "home cooking",
-      "classic comfort food", "heritage dishes", "old-fashioned puddings",
-      "family recipes", "grandmother's cooking"
-    ],
-    "flavours": ["briny", "smoky", "sweet and sour", "bold", "savoury", "sweet"],
-    "textures": ["velvety", "airy", "light", "chewy", "crispy"],
-    "occasions": ["family gathering", "holiday feast", "Sunday brunch", "comfort meal"],
-    "top_cuisines": ["British", "American", "French", "Italian", "Filipino"],
-    "meal_types": ["Main Course", "Dessert", "Breakfast", "Soup"],
-    "avoid": ["trendy", "fusion", "deconstructed"],
-    "spice_preference": "mild",
-    "ui": {
-      "emoji": "🕰️",
-      "colour": "#FAF0E6",
-      "label": "Nostalgic"
-    }
-  },
-
-  "celebratory": {
-    "descriptors": [
-      "festive", "indulgent", "showstopping", "luxurious", "special",
-      "party", "impressive", "extravagant", "decadent", "treat",
-      "sharing feast", "milestone", "birthday", "champagne food", "rich"
-    ],
-    "food_categories": [
-      "whole roasts", "lobster", "champagne pairings", "layered cakes",
-      "sharing feasts", "dumplings", "fine seafood", "whole fish",
-      "elaborate desserts", "canapés"
-    ],
-    "flavours": ["sweet and sour", "umami-rich", "bitter", "citrusy", "rich", "buttery"],
-    "textures": ["crispy", "fluffy", "flaky", "silky", "melt-in-your-mouth"],
-    "occasions": ["celebration feast", "holiday feast", "family gathering", "birthday"],
-    "top_cuisines": ["French", "Chinese", "Italian", "Japanese", "Lebanese"],
-    "meal_types": ["Main Course", "Starter", "Dessert"],
-    "avoid": ["plain", "everyday", "quick"],
-    "spice_preference": "any",
-    "ui": {
-      "emoji": "🥂",
-      "colour": "#FFF9E6",
-      "label": "Celebratory"
-    }
-  },
-
-  "lonely": {
-    "descriptors": [
-      "comforting", "warming", "simple", "honest", "nourishing",
-      "solo meal", "for one", "easy", "self-care", "cosy",
-      "hug food", "kind", "gentle", "filling", "satisfying"
-    ],
-    "food_categories": [
-      "solo portions", "single-serve bowls", "simple pasta",
-      "warm soups", "ramen", "omelette", "toast", "warm curries",
-      "noodle bowls", "comfort food for one"
-    ],
-    "flavours": ["tangy", "earthy", "peppery", "umami-rich", "savoury", "sweet"],
-    "textures": ["airy", "velvety", "fluffy", "silky", "warm"],
-    "occasions": ["solo lunch", "comfort meal", "weeknight dinner", "rainy day"],
-    "top_cuisines": ["Japanese", "Greek", "Mediterranean", "Indian", "Thai"],
-    "meal_types": ["Main Course", "Soup", "Snack"],
-    "avoid": ["large sharing portions", "complex"],
-    "spice_preference": "mild to medium",
-    "ui": {
-      "emoji": "🧸",
-      "colour": "#F0F0FA",
-      "label": "Lonely"
-    }
-  },
-
-  "energetic": {
-    "descriptors": [
-      "fresh", "light", "vibrant", "protein-rich", "zingy",
-      "fuel", "performance", "clean eating", "post-workout", "lean",
-      "high-energy", "power food", "active", "athletic", "nutritious"
-    ],
-    "food_categories": [
-      "protein bowls", "grilled chicken", "salads", "smoothie bowls",
-      "eggs", "lean meat", "high-protein dishes", "fresh fish",
-      "grain bowls", "vegetable stir-fry"
-    ],
-    "flavours": ["creamy", "umami-rich", "tangy", "fragrant", "citrusy", "herbaceous"],
-    "textures": ["fluffy", "light", "flaky", "crispy", "tender"],
-    "occasions": ["post-workout meal", "Sunday brunch", "quick bite", "meal prep"],
-    "top_cuisines": ["Japanese", "Mediterranean", "Ethiopian", "Thai", "Vietnamese"],
-    "meal_types": ["Main Course", "Salad", "Breakfast", "Snack"],
-    "avoid": ["heavy", "fried", "stodgy", "high-sugar desserts"],
-    "spice_preference": "any",
-    "ui": {
-      "emoji": "⚡",
-      "colour": "#FFFBE6",
-      "label": "Energetic"
-    }
-  },
-
-  "sluggish": {
-    "descriptors": [
-      "energising", "spiced", "stimulating", "reviving", "bold",
-      "kick", "caffeine", "awakening", "metabolism-boosting",
-      "lively flavours", "invigorating", "punchy", "bright"
-    ],
-    "food_categories": [
-      "spiced dishes", "coffee-infused", "chilli", "ginger-forward",
-      "citrus dishes", "light energising soups", "protein-rich",
-      "nutrient-dense", "antioxidant-rich"
-    ],
-    "flavours": ["tangy", "creamy", "peppery", "delicate", "bold", "spicy"],
-    "textures": ["silky", "airy", "fluffy", "light", "crispy"],
-    "occasions": ["Sunday brunch", "post-workout meal", "quick bite", "rainy day"],
-    "top_cuisines": ["Spanish", "Ethiopian", "French", "Indian", "Korean"],
-    "meal_types": ["Breakfast", "Snack", "Main Course", "Drink"],
-    "avoid": ["very heavy", "sedating", "high-sugar"],
-    "spice_preference": "medium to spicy",
-    "ui": {
-      "emoji": "🐢",
-      "colour": "#EFF8F0",
-      "label": "Sluggish"
-    }
-  },
-
-  "focused": {
-    "descriptors": [
-      "clean", "light", "brain-boosting", "sustaining", "simple",
-      "omega-3", "antioxidant", "low-distraction", "precise", "clear",
-      "brain food", "cognitive", "steady energy", "no-nonsense"
-    ],
-    "food_categories": [
-      "brain food", "omega-3 rich", "nuts and seeds",
-      "oily fish", "blueberries", "whole grains", "avocado",
-      "green vegetables", "eggs", "light salads"
-    ],
-    "flavours": ["briny", "fragrant", "citrusy", "sweet and sour", "delicate", "herbaceous"],
-    "textures": ["sticky", "flaky", "crispy", "light", "chewy"],
-    "occasions": ["meal prep", "solo lunch", "quick bite", "weeknight dinner"],
-    "top_cuisines": ["Japanese", "Mediterranean", "Scandinavian", "British", "Mexican"],
-    "meal_types": ["Main Course", "Salad", "Snack", "Breakfast"],
-    "avoid": ["heavy", "high-sugar crash", "sluggish"],
-    "spice_preference": "mild",
-    "ui": {
-      "emoji": "🎯",
-      "colour": "#EDF5FF",
-      "label": "Focused"
-    }
-  },
-
-  "heartbroken": {
-    "descriptors": [
-      "comforting", "indulgent", "nostalgic", "gentle", "soothing",
-      "healing", "chocolate", "ice cream", "soft", "warm",
-      "self-care", "feel-better", "kind to yourself", "sweet relief"
-    ],
-    "food_categories": [
-      "chocolate desserts", "ice cream", "warm brownies",
-      "comfort food", "ramen", "pasta", "mac and cheese",
-      "warm pastries", "hot soup", "sweet treats"
-    ],
-    "flavours": ["tangy", "spicy", "fragrant", "sweet", "rich", "nutty"],
-    "textures": ["airy", "crispy", "flaky", "silky", "melt-in-your-mouth"],
-    "occasions": ["comfort meal", "solo lunch", "rainy day", "weeknight dinner"],
-    "top_cuisines": ["American", "Italian", "Japanese", "Turkish", "Mexican"],
-    "meal_types": ["Dessert", "Main Course", "Snack"],
-    "avoid": ["complicated", "sharing for two", "romantic"],
-    "spice_preference": "mild",
-    "ui": {
-      "emoji": "💔",
-      "colour": "#FFF0F8",
-      "label": "Heartbroken"
-    }
-  },
-
-  "proud": {
-    "descriptors": [
-      "celebratory", "elaborate", "showstopping", "impressive", "rich",
-      "achievement", "reward", "treat", "hard-earned", "milestone",
-      "special occasion", "I deserve this", "luxurious", "crafted"
-    ],
-    "food_categories": [
-      "elaborate dishes", "show-off recipes", "fine dining",
-      "hard-to-make pastry", "impressive roasts",
-      "layered cakes", "slow-braised meat", "elegant seafood"
-    ],
-    "flavours": ["sweet", "bitter", "earthy", "sweet and sour", "umami-rich", "rich"],
-    "textures": ["airy", "flaky", "crunchy", "silky", "melt-in-your-mouth"],
-    "occasions": ["celebration feast", "romantic dinner", "family gathering"],
-    "top_cuisines": ["French", "Middle Eastern", "Lebanese", "Spanish", "Japanese"],
-    "meal_types": ["Main Course", "Dessert", "Starter"],
-    "avoid": ["quick", "simple", "plain"],
-    "spice_preference": "any",
-    "ui": {
-      "emoji": "🏆",
-      "colour": "#FFFBEC",
-      "label": "Proud"
-    }
-  },
-
-  "nervous": {
-    "descriptors": [
-      "mild", "familiar", "simple", "calming", "light",
-      "plain", "safe choice", "well-known", "non-adventurous",
-      "easy", "predictable", "easy to eat", "non-threatening"
-    ],
-    "food_categories": [
-      "plain food", "familiar favourites", "easy sandwiches",
-      "plain pasta", "rice dishes", "simple soups", "toast",
-      "crackers", "mild curry", "omelette"
-    ],
-    "flavours": ["umami-rich", "spicy", "creamy", "fragrant", "delicate", "savoury"],
-    "textures": ["airy", "light", "crispy", "fluffy", "tender"],
-    "occasions": ["solo lunch", "quick bite", "weeknight dinner"],
-    "top_cuisines": ["Italian", "Japanese", "British", "Spanish", "Mexican"],
-    "meal_types": ["Main Course", "Snack", "Soup"],
-    "avoid": ["very spicy", "unusual textures", "challenging"],
-    "spice_preference": "mild",
-    "ui": {
-      "emoji": "😬",
-      "colour": "#F5F5FA",
-      "label": "Nervous"
-    }
-  },
-
-  "content": {
-    "descriptors": [
-      "satisfying", "balanced", "wholesome", "pleasant", "harmonious",
-      "just right", "well-rounded", "complete", "measured", "perfect",
-      "everyday favourite", "nothing to prove", "good food", "steady"
-    ],
-    "food_categories": [
-      "balanced meals", "grain bowls", "well-rounded dishes",
-      "everyday favourites", "seasonal ingredients",
-      "simple but quality", "honest cooking"
-    ],
-    "flavours": ["sweet and sour", "buttery", "nutty", "creamy", "savoury", "umami-rich"],
-    "textures": ["melt-in-your-mouth", "dense", "tender", "chewy", "hearty"],
-    "occasions": ["weeknight dinner", "family gathering", "date night", "solo lunch"],
-    "top_cuisines": ["Thai", "Indian", "Chinese", "Italian", "Mediterranean"],
-    "meal_types": ["Main Course", "Salad", "Side Dish"],
-    "avoid": ["extreme", "overly complex"],
-    "spice_preference": "any",
-    "ui": {
-      "emoji": "😌",
-      "colour": "#F0FAF0",
-      "label": "Content"
-    }
-  }
+  "happy": [
+    "uplifting", "bright", "joyful", "light", "fresh", "colourful",
+    "celebratory", "cheerful", "energising", "vibrant", "feel-good",
+    "sunshine", "zesty", "playful", "lively"
+  ],
+  "sad": [
+    "comforting", "warming", "soothing", "nostalgic", "gentle",
+    "soul-food", "healing", "tender", "soft", "consoling",
+    "hug-in-a-bowl", "homestyle", "familiar", "cosy", "nourishing"
+  ],
+  "stressed": [
+    "calming", "indulgent", "familiar", "reliable", "grounding",
+    "stress-relief", "satisfying", "uncomplicated", "soothing",
+    "comfort", "unwinding", "treat yourself", "restorative", "simple"
+  ],
+  "tired": [
+    "energising", "quick", "nourishing", "reviving", "easy",
+    "simple", "iron-rich", "protein-packed", "pick-me-up",
+    "sustaining", "fuel", "refreshing", "quick prep", "effortless"
+  ],
+  "romantic": [
+    "elegant", "rich", "sensual", "indulgent", "intimate",
+    "luxurious", "special", "impressive", "sophisticated", "refined",
+    "date-night", "candlelit", "fine dining", "share-worthy", "beautiful"
+  ],
+  "excited": [
+    "bold", "vibrant", "festive", "adventurous", "fun",
+    "punchy", "colourful", "party food", "crowd-pleasing",
+    "sharing", "big flavours", "celebratory", "lively", "energetic"
+  ],
+  "cozy": [
+    "warming", "hearty", "comforting", "snug", "familiar",
+    "homemade", "slow-cooked", "winter", "autumnal", "blanket food",
+    "hot", "thick", "stodgy", "filling", "rustic"
+  ],
+  "adventurous": [
+    "exotic", "bold", "unusual", "complex", "thrilling",
+    "world flavours", "street food", "fermented", "rare", "discovery",
+    "unfamiliar", "global", "boundary-pushing", "fusion", "unique"
+  ],
+  "anxious": [
+    "gentle", "mild", "calming", "soothing", "familiar",
+    "safe", "plain", "easy-on-the-stomach", "light", "bland",
+    "simple", "non-stimulating", "soft", "easy to eat", "comforting"
+  ],
+  "bored": [
+    "surprising", "interesting", "flavourful", "stimulating", "unique",
+    "punchy", "new experience", "something different", "exciting flavours",
+    "never tried", "fusion", "curiosity", "discovery", "bold", "complex"
+  ],
+  "nostalgic": [
+    "classic", "traditional", "homestyle", "reminiscent", "timeless",
+    "grandma's recipe", "childhood favourite", "old school", "heritage",
+    "retro", "home cooking", "memory", "vintage", "original", "authentic"
+  ],
+  "celebratory": [
+    "festive", "indulgent", "showstopping", "luxurious", "special",
+    "party", "impressive", "extravagant", "decadent", "treat",
+    "sharing feast", "milestone", "birthday", "champagne food", "rich"
+  ],
+  "lonely": [
+    "comforting", "warming", "simple", "honest", "nourishing",
+    "solo meal", "for one", "easy", "self-care", "cosy",
+    "hug food", "kind", "gentle", "filling", "satisfying"
+  ],
+  "energetic": [
+    "fresh", "light", "vibrant", "protein-rich", "zingy",
+    "fuel", "performance", "clean eating", "post-workout", "lean",
+    "high-energy", "power food", "active", "athletic", "nutritious"
+  ],
+  "sluggish": [
+    "energising", "spiced", "stimulating", "reviving", "bold",
+    "kick", "caffeine", "awakening", "metabolism-boosting",
+    "lively flavours", "invigorating", "punchy", "bright"
+  ],
+  "focused": [
+    "clean", "light", "brain-boosting", "sustaining", "simple",
+    "omega-3", "antioxidant", "low-distraction", "precise", "clear",
+    "brain food", "cognitive", "steady energy", "no-nonsense"
+  ],
+  "heartbroken": [
+    "comforting", "indulgent", "nostalgic", "gentle", "soothing",
+    "healing", "chocolate", "ice cream", "soft", "warm",
+    "self-care", "feel-better", "kind to yourself", "sweet relief"
+  ],
+  "proud": [
+    "celebratory", "elaborate", "showstopping", "impressive", "rich",
+    "achievement", "reward", "treat", "hard-earned", "milestone",
+    "special occasion", "I deserve this", "luxurious", "crafted"
+  ],
+  "nervous": [
+    "mild", "familiar", "simple", "calming", "light",
+    "plain", "safe choice", "well-known", "non-adventurous",
+    "easy", "predictable", "easy to eat", "non-threatening"
+  ],
+  "content": [
+    "satisfying", "balanced", "wholesome", "pleasant", "harmonious",
+    "just right", "well-rounded", "complete", "measured", "perfect",
+    "everyday favourite", "nothing to prove", "good food", "steady"
+  ]
 }

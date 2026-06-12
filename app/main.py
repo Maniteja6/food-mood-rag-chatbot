@@ -289,5 +289,6 @@ def _intercept_loading() -> bool:
 if __name__ == "__main__" or True:
     # The `or True` ensures this block runs when Streamlit executes the file
     # as a module (it doesn't set __name__ == "__main__").
+    ss.init()
     if not _intercept_loading():
         main()
