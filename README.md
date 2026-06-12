@@ -111,7 +111,7 @@ food-mood-rag-chatbot/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/yourusername/food-mood-rag-chatbot.git
+git clone https://github.com/Maniteja6/food-mood-rag-chatbot.git
 cd food-mood-rag-chatbot
 ```
 
