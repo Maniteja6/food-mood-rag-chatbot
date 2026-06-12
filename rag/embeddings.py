@@ -247,8 +247,9 @@ class EmbeddingModel:
 
         # Re-insert zero vectors for any blank inputs (keeps index alignment)
         if len(non_empty_indices) < len(texts):
-            dim          = len(vectors[0]) if vectors else 0
-            full_vectors = [[0.0] * dim] * len(texts)
+            dim          = len(vectors[0]) if vectors else self.dimension
+            full_vectors = [[0.0] * dim for _ in range(len(texts))]
+            
             for idx, vec in zip(non_empty_indices, vectors):
                 full_vectors[idx] = vec
             return full_vectors
