@@ -836,5 +836,5 @@ def write_csv(rows, path):
     print(f"Saved → {path}  ({len(rows):,} rows)")
 
 if __name__ == "__main__":
-    rows = generate_rows(1000)
+    rows = generate_rows(2000)
     write_csv(rows, "C:\\Users\\manit\\OneDrive\\Desktop\\projects\\food-mood-rag-chatbot\\data\\raw\\food_dataset.csv")
