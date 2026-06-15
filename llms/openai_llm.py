@@ -57,12 +57,10 @@ class OpenAILLM(LLMBase):
         temperature: float = 0.7,
         max_tokens:  int   = 1024,
     ) -> None:
-        if not api_key or not api_key.strip():
-            raise RuntimeError(
-                "OpenAI API key is required. "
-                "Set OPENAI_API_KEY in your .env file."
-            )
-        self._api_key    = api_key.strip()
+        # Store the key even if empty — the hard check runs in _get_client()
+        # so pipeline.initialise() succeeds and the app shows a graceful
+        # "API key missing" message instead of crashing with RuntimeError.
+        self._api_key    = (api_key or "").strip()
         self._model      = model
         self._temperature = temperature
         self._max_tokens  = max_tokens
@@ -107,6 +105,11 @@ class OpenAILLM(LLMBase):
             raise ImportError(
                 "openai package is required for OpenAI LLM. "
                 "Run: pip install openai"
+            )
+        if not self._api_key:
+            raise RuntimeError(
+                "OPENAI_API_KEY is not set. "
+                "Add it to your .env file and restart the app."
             )
         self._client = OpenAI(api_key=self._api_key)
         logger.debug("OpenAI client initialised.")

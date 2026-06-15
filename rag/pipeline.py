@@ -96,7 +96,8 @@ class RAGPipeline:
         self._embed_fn      = None      # kept for backward compat (not used)
         self._embedding_model = None    # rag.embeddings.EmbeddingModel instance
         self._vector_store  = None      # ChromaDB collection or FAISS dict
-        self._llm_client    = None      # LLM client object
+        self._llm_client    = None      # kept for backward compat (not used)
+        self._llm           = None      # llm.base.LLMBase instance
         self._retriever     = None      # rag.retriever.Retriever instance
         self._initialised   = False
 
@@ -128,16 +129,27 @@ class RAGPipeline:
         from rag.embeddings import EmbeddingModel
         self._embedding_model = EmbeddingModel.from_settings(self.cfg)
         self._embed_fn        = self._embedding_model.embed_documents  # backward compat
+
         self._vector_store = self._build_vector_store()
-        self._llm_client   = self._build_llm_client()
+
+        # LLM: key is NOT validated here — deferred to first complete() call.
+        # This means the app starts and shows a clear "add your API key" message
+        # in the chat instead of crashing with RuntimeError during initialise().
+        from llms import LLMBase
+        self._llm        = LLMBase.from_settings(self.cfg)
+        self._llm_client = self._llm   # backward compat alias
 
         # Delegate all vector-search work to the standalone Retriever
         from rag.retriever import Retriever
         self._retriever    = Retriever(self._vector_store, self.cfg)
 
-        self._initialised  = True
-
-        logger.info(f"RAG pipeline ready in {time.perf_counter() - t0:.2f}s")
+        self._initialised = True
+        logger.info(
+            f"RAG pipeline ready in {time.perf_counter() - t0:.2f}s  |  "
+            f"llm={self.cfg.llm_provider.value}/{self.cfg.active_llm_model}  |  "
+            f"embed={self.cfg.embedding_provider.value}  |  "
+            f"vectors={self._vector_store.health().get('count', 0):,}"
+        )
 
     def _require_init(self) -> None:
         if not self._initialised:
@@ -664,31 +676,10 @@ class RAGPipeline:
 
     def _call_llm(self, messages: list[Message]) -> str:
         """
-        Call the configured LLM with the message array.
-        Returns the raw string response.
-
-        Retries up to 2 times on transient errors.
+        Delegate to the LLMBase instance (llm/ package).
+        Retry logic lives inside LLMBase._call_with_retry().
         """
-        provider = self.cfg.llm_provider.value
-        max_retries = 2
-
-        for attempt in range(1, max_retries + 2):
-            try:
-                if provider == "openai":
-                    return self._call_openai(messages)
-                elif provider == "anthropic":
-                    return self._call_anthropic(messages)
-                elif provider == "google":
-                    return self._call_google(messages)
-            except Exception as exc:                            # noqa: BLE001
-                if attempt > max_retries:
-                    raise
-                wait = 2 ** attempt
-                logger.warning(
-                    f"LLM call failed (attempt {attempt}/{max_retries + 1}): "
-                    f"{exc}. Retrying in {wait}s …"
-                )
-                time.sleep(wait)
+        return self._llm.complete(messages)
 
     def _call_openai(self, messages: list[Message]) -> str:
         response = self._llm_client.chat.completions.create(
@@ -926,6 +917,7 @@ class RAGPipeline:
             "initialised":      self._initialised,
             "llm_provider":     self.cfg.llm_provider.value,
             "llm_model":        self.cfg.active_llm_model,
+            "llm_info":         self._llm.info() if self._llm else {},
             "embedding":        self.cfg.embedding_provider.value,
             "embedding_model":  self.cfg.active_embedding_model,
             "embedding_dim":    (

@@ -271,7 +271,7 @@ def _build_embedding_fn(
         )
 
 
-def _build_openai_embed_fn(cfg: dict, log: logging.Logger):
+#def _build_openai_embed_fn(cfg: dict, log: logging.Logger):
     """Build an OpenAI embedding function with retry logic."""
     try:
         from openai import OpenAI

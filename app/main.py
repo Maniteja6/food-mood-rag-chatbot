@@ -248,6 +248,23 @@ def _run_pipeline_and_respond() -> None:
                     f"{latency:.0f}ms"
                 )
 
+    except RuntimeError as exc:
+        msg = str(exc)
+        if "API key" in msg or "not set" in msg:
+            response_text = (
+                "⚠️ **API key not configured.** "
+                "Please add your `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY`) "
+                "to your `.env` file and restart the app. "
+                "See `.env.example` for the full list of required variables."
+            )
+        else:
+            response_text = (
+                f"I ran into a configuration error: {msg}. "
+                "Please check your `.env` file and restart the app."
+            )
+        recommendations = []
+        traceback.print_exc()
+
     except Exception as exc:            # noqa: BLE001
         response_text   = (
             "I ran into a small hiccup fetching your recommendations. "

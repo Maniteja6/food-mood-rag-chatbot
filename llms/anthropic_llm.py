@@ -61,12 +61,8 @@ class AnthropicLLM(LLMBase):
         temperature: float = 0.7,
         max_tokens:  int   = 1024,
     ) -> None:
-        if not api_key or not api_key.strip():
-            raise RuntimeError(
-                "Anthropic API key is required. "
-                "Set ANTHROPIC_API_KEY in your .env file."
-            )
-        self._api_key     = api_key.strip()
+        # Store even if empty — deferred check runs in _get_client()
+        self._api_key     = (api_key or "").strip()
         self._model       = model
         self._temperature = temperature
         self._max_tokens  = max_tokens
@@ -111,6 +107,11 @@ class AnthropicLLM(LLMBase):
             raise ImportError(
                 "anthropic package is required for Anthropic LLM. "
                 "Run: pip install anthropic"
+            )
+        if not self._api_key:
+            raise RuntimeError(
+                "ANTHROPIC_API_KEY is not set. "
+                "Add it to your .env file and restart the app."
             )
         self._client = anthropic.Anthropic(api_key=self._api_key)
         logger.debug("Anthropic client initialised.")
