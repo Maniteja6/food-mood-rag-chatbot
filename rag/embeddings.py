@@ -166,7 +166,7 @@ class EmbeddingModel:
         Returns:
             Configured EmbeddingModel.
         """
-        provider = cfg.get("embedding_provider", "openai").lower()
+        provider = cfg.get("embedding_provider", "huggingface").lower()
         model    = (
             cfg.get("hf_embedding_model",
                     "sentence-transformers/all-MiniLM-L6-v2")
